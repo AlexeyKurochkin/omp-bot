@@ -9,7 +9,6 @@ import (
 	"log"
 )
 
-const messagePerPage uint64 = 5
 
 type CallbackListData struct {
 	Offset int `json:"offset"`
@@ -32,7 +31,7 @@ func (c *MessageCommander) CallbackList(callback *tgbotapi.CallbackQuery, callba
 }
 
 func BuildMessage(c *MessageCommander, parsedData CallbackListData, callback *tgbotapi.CallbackQuery) tgbotapi.MessageConfig {
-	values, boundsError := c.messageService.List(uint64(parsedData.Offset), messagePerPage)
+	values, boundsError := c.messageService.List(uint64(parsedData.Offset), messagesPerPage)
 	isMessageListEnded := boundsError != nil
 	msg := tgbotapi.NewMessage(callback.Message.Chat.ID, GetMessageText(isMessageListEnded, values))
 	if !isMessageListEnded {
@@ -44,7 +43,7 @@ func BuildMessage(c *MessageCommander, parsedData CallbackListData, callback *tg
 }
 
 func GetNumericKeyboard(parsedData CallbackListData) tgbotapi.InlineKeyboardMarkup {
-	serializedData, _ := json.Marshal(CallbackListData{parsedData.Offset + int(messagePerPage)})
+	serializedData, _ := json.Marshal(CallbackListData{parsedData.Offset + int(messagesPerPage)})
 	var numericKeyboard = tgbotapi.NewInlineKeyboardMarkup(
 		tgbotapi.NewInlineKeyboardRow(
 			tgbotapi.NewInlineKeyboardButtonData("Load more", fmt.Sprintf("communication__message__list__%v", string(serializedData))),

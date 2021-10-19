@@ -9,6 +9,7 @@ import (
 
 const newArgumentRowsCount = 3
 const editArgumentRowsCount = 4
+const messagesPerPage uint64 = 5
 
 type IMessageService interface {
 	Describe(messageID uint64) (*communication.Message, error)
