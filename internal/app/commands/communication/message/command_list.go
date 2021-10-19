@@ -11,7 +11,7 @@ func (m MessageCommander) List(inputMsg *tgbotapi.Message) {
 	values, _ := m.messageService.List(0, 5)
 	text := ""
 	for i := range values {
-		text += values[i].String() + "\n"
+		text += values[i].String() + "\n\n"
 	}
 
 	serializedData, _ := json.Marshal(CallbackListData{5})
