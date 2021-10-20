@@ -13,8 +13,8 @@ func (m MessageCommander) New(inputMsg *tgbotapi.Message) {
 	if error != nil {
 		text = fmt.Sprintf("Less then %v rows of values were provided", newArgumentRowsCount)
 	} else {
-		newIndex := AddNewMessage(messageData, m)
-		text = fmt.Sprintf("Index of new item: %v", newIndex)
+		newMessageId := AddNewMessage(messageData, m)
+		text = fmt.Sprintf("New message Id is: %v", newMessageId)
 	}
 
 	newBotMessage := tgbotapi.NewMessage(inputMsg.Chat.ID, text)

@@ -14,11 +14,11 @@ func (m MessageCommander) Edit(inputMsg *tgbotapi.Message) {
 		text = fmt.Sprintf("Less then %v rows of values were provided", editArgumentRowsCount)
 	} else {
 		message := CreateMessage(messageData[1:])
-		lookupMessageNumber, error := strconv.ParseUint(messageData[0], 0, 64)
+		lookupMessageIndex, error := strconv.ParseUint(messageData[0], 0, 64)
 		if error != nil {
-			text = "Incorrect index provided"
+			text = "Incorrect id provided"
 		} else {
-			error := UpdateMessage(lookupMessageNumber - 1, message, m.messageService)
+			error := UpdateMessage(lookupMessageIndex, message, m.messageService)
 			if error != nil {
 				text = fmt.Sprintf("Message for update was not found")
 			} else {
@@ -31,6 +31,6 @@ func (m MessageCommander) Edit(inputMsg *tgbotapi.Message) {
 	m.bot.Send(newBotMessage)
 }
 
-func UpdateMessage(index uint64, updateMessageData communication.Message, messageService IMessageService) error {
-	return messageService.Update(index, updateMessageData)
+func UpdateMessage(id uint64, updateMessageData communication.Message, messageService IMessageService) error {
+	return messageService.Update(id, updateMessageData)
 }

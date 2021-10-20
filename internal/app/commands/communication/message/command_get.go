@@ -11,11 +11,11 @@ func (m MessageCommander) Get(inputMsg *tgbotapi.Message) {
 	index, error := strconv.ParseUint(arguments, 0, 64)
 	text := ""
 	if error != nil {
-		text = "Wrong index provided"
+		text = "Wrong id provided"
 	} else {
-		message, error := m.messageService.Describe(index - 1)
+		message, error := m.messageService.Describe(index)
 		if error != nil {
-			text = "Message with such number does not exist"
+			text = "Message with such id does not exist"
 		} else {
 			text = message.String()
 		}

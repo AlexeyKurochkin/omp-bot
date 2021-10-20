@@ -9,23 +9,25 @@ import (
 
 func (m MessageCommander) Delete(inputMsg *tgbotapi.Message) {
 	arguments := inputMsg.CommandArguments()
-	index, error := strconv.ParseUint(arguments, 0, 64)
+	messageId, error := strconv.ParseUint(arguments, 0, 64)
+	text := ""
 	if error != nil {
-		log.Println("Incorrect message number", error)
-	}
-
-	successfullyDeleted, error := m.messageService.Remove(index - 1)
-	if error != nil {
-		log.Println("Error appeared during deletion of message", error)
-	}
-
-	if successfullyDeleted {
-		messageText := fmt.Sprintf("Successfully deleted message with index %v", index)
-		message := tgbotapi.NewMessage(inputMsg.Chat.ID, messageText)
-		_, error := m.bot.Send(message)
+		text = fmt.Sprintf("Incorrect message number")
+	} else {
+		successfullyDeleted, error := m.messageService.Remove(messageId)
 		if error != nil {
-			log.Printf("Error sending message to chat %v", error)
+			text = fmt.Sprintf("%v", error)
+		}
+
+		if successfullyDeleted {
+			text = fmt.Sprintf("Successfully deleted message with messageId %v", messageId)
 		}
 	}
 
+
+	message := tgbotapi.NewMessage(inputMsg.Chat.ID, text)
+	_, error = m.bot.Send(message)
+	if error != nil {
+		log.Printf("Error sending message to chat %v", error)
+	}
 }

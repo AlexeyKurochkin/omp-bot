@@ -16,7 +16,13 @@ func (d DummyMessageService) Describe(messageID uint64) (*communication.Message,
 		return nil, err
 	}
 
-	return &communication.AllMessages[messageID], nil
+	for i := 0; i < len(communication.AllMessages); i++ {
+		if messageID == communication.AllMessages[i].ID {
+			return &communication.AllMessages[i], nil
+		}
+	}
+
+	return nil, errors.New("Message was not found")
 }
 
 func (d DummyMessageService) List(cursor uint64, limit uint64) ([]communication.Message, error) {
@@ -34,8 +40,9 @@ func (d DummyMessageService) List(cursor uint64, limit uint64) ([]communication.
 }
 
 func (d DummyMessageService) Create(message communication.Message) (uint64, error) {
+	message.ID = uint64(len(communication.AllMessages)) + 1
 	communication.AllMessages = append(communication.AllMessages, message)
-	return uint64(len(communication.AllMessages)), nil
+	return message.ID, nil
 }
 
 func (d DummyMessageService) Update(messageID uint64, message communication.Message) error {
@@ -55,8 +62,14 @@ func (d DummyMessageService) Remove(messageID uint64) (bool, error) {
 		return false, error
 	}
 
-	communication.AllMessages = append(communication.AllMessages[:messageID], communication.AllMessages[messageID + 1:]...)
-	return true, nil
+	for i := 0; i < len(communication.AllMessages); i++ {
+		if messageID == communication.AllMessages[i].ID {
+			communication.AllMessages = append(communication.AllMessages[:i], communication.AllMessages[i + 1:]...)
+			return true, nil
+		}
+	}
+
+	return false, errors.New("Message was not found")
 }
 
 func CheckOutOfBound(cursor uint64) (error) {
