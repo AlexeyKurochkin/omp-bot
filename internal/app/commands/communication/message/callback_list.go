@@ -11,7 +11,7 @@ import (
 
 
 type CallbackListData struct {
-	Offset int `json:"offset"`
+	Offset uint64 `json:"offset"`
 }
 
 func (c *MessageCommander) CallbackList(callback *tgbotapi.CallbackQuery, callbackPath path.CallbackPath) {
@@ -43,7 +43,7 @@ func BuildMessage(c *MessageCommander, parsedData CallbackListData, callback *tg
 }
 
 func GetNumericKeyboard(parsedData CallbackListData) tgbotapi.InlineKeyboardMarkup {
-	serializedData, _ := json.Marshal(CallbackListData{parsedData.Offset + int(messagesPerPage)})
+	serializedData, _ := json.Marshal(CallbackListData{parsedData.Offset + messagesPerPage})
 	var numericKeyboard = tgbotapi.NewInlineKeyboardMarkup(
 		tgbotapi.NewInlineKeyboardRow(
 			tgbotapi.NewInlineKeyboardButtonData("Load more", fmt.Sprintf("communication__message__list__%v", string(serializedData))),
