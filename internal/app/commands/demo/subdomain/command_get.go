@@ -7,6 +7,14 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
+type CommandGetData struct {
+	From string `json:"from"`
+	To string `json:"to"`
+	Text string `json:"text"`
+	Datetime string `json:"datetime"`
+}
+
+
 func (c *DemoSubdomainCommander) Get(inputMessage *tgbotapi.Message) {
 	args := inputMessage.CommandArguments()
 
